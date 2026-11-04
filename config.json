@@ -1,6 +1,6 @@
 {
 	"srcdir" : "C:/Users/DUMMY_USER/Downloads/",
-	"target" : "C:/Users/DUMMY_USER/Documents/iracing/setups/",
-	"garage61" : "Garage 61 - Next Chapter",
+	"irsetupdir" : "C:/Users/DUMMY_USER/Documents/iracing/setups/",
+	"subdir" : "Garage 61 - YOUR_TEAM_NAME/",
 	"sandbox" : "C:/Users/DUMMY_USER/Documents/sandbox/iracing/setups/"
 }

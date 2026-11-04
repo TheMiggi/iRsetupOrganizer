@@ -7,6 +7,7 @@ import re
 import os
 import json
 import sys
+import zipfile
 
 ACTUAL_USER = os.getlogin()
 FILES_END_WITH = ".sto"
@@ -90,6 +91,60 @@ def p1doks(args, source_dir, target_dir_prefix, target_dir_suffix):
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 # GO
+def buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix):
+    name = os.path.splitext(os.path.basename(filename))[0].upper()
+    target_dir_car = None
+    for car_key in sorted(PathsToCars.keys(), key=len, reverse=True):
+        if car_key.upper() in name:
+            target_dir_car = PathsToCars[car_key]
+            break
+
+    if target_dir_car is None:
+        raise ValueError(f"No GO car mapping found in filename: {filename}")
+
+    target_dir_seasonAndWeek = ""
+    season_week_match = re.search(r"(?P<year>\d{2})S(?P<week>\d+)", name)
+    if season_week_match:
+        target_dir_seasonAndWeek = f"20{season_week_match.group('year')}W{int(season_week_match.group('week')):02d}"
+    else:
+        week_match = re.search(r"(?P<year>(?:19|20)\d{2})W(?P<week>\d+)", name)
+        if week_match:
+            target_dir_seasonAndWeek = f"{week_match.group('year')}W{int(week_match.group('week')):02d}"
+        else:
+            week_match = re.search(r"W(?P<week>\d+)", name)
+            if week_match:
+                target_dir_seasonAndWeek = f"W{int(week_match.group('week')):02d}"
+
+    if args.debug:
+        print("Car mapping: ", target_dir_car)
+        print("Week after padding: ", target_dir_seasonAndWeek)
+
+    return target_dir_prefix + target_dir_car + target_dir_suffix + target_dir_seasonAndWeek
+
+def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix):
+    zip_name = os.path.splitext(os.path.basename(zip_path))[0]
+    extract_dir = os.path.join(os.path.dirname(zip_path), zip_name + "_extracted")
+
+    if os.path.exists(extract_dir):
+        shutil.rmtree(extract_dir)
+
+    with zipfile.ZipFile(zip_path, "r") as archive:
+        archive.extractall(extract_dir)
+
+    extracted_files = []
+    for root, _, files in os.walk(extract_dir):
+        for file_name in files:
+            if file_name.lower().endswith(FILES_END_WITH.lower()):
+                extracted_files.append(os.path.join(root, file_name))
+
+    for file_path in sorted(extracted_files):
+        filename = os.path.basename(file_path)
+        target_dir = buildGoTargetDir(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix)
+        copyOrMoveFiles(args, target_dir, file_path, filename)
+
+    if os.path.exists(extract_dir):
+        shutil.rmtree(extract_dir)
+
 def go(args, source_dir, target_dir_prefix, target_dir_suffix):
     # GO uses the same setup naming pattern as P1Doks in most cases.
     PathsToCars = loadCarsToDirectoryPathsGo()
@@ -100,6 +155,10 @@ def go(args, source_dir, target_dir_prefix, target_dir_suffix):
         if not os.path.isfile(file_path):
             continue
 
+        if filename.lower().startswith("go") and filename.lower().endswith(".zip"):
+            moveGoZipSetups(args, file_path, PathsToCars, target_dir_prefix, target_dir_suffix)
+            continue
+
         FILES_START_WITH = "GO"
         if not filename.lower().startswith(FILES_START_WITH.lower()):
             continue
@@ -107,29 +166,10 @@ def go(args, source_dir, target_dir_prefix, target_dir_suffix):
         if not filename.lower().endswith(FILES_END_WITH.lower()):
             continue
 
-        name, ext = os.path.splitext(filename)
         if args.debug:
             print("Setup : " + filename)
 
-        parts = name.split("_")
-        target_dir_car = PathsToCars[parts[1]]
-        weekPattern = r"W\d+"
-        if len(parts) >= 6:
-            week = parts[5]
-            if args.debug:
-                print("Season and Week: ", week)
-                print("Week after cutting: ", re.search(weekPattern, week).group())
-            target_dir_seasonAndWeek = parts[5][0:4] + padWeekNr(args, re.search(weekPattern, week).group())
-        else:
-            week = parts[4]
-            if args.debug:
-                print("Season and Week: ", week)
-                print("Week after cutting: ", re.search(weekPattern, week).group())
-            target_dir_seasonAndWeek = parts[4][0:4] + padWeekNr(args, re.search(weekPattern, week).group())
-        if args.debug:
-            print("Week after padding: ", target_dir_seasonAndWeek)
-
-        target_dir = target_dir_prefix + target_dir_car + target_dir_suffix + target_dir_seasonAndWeek
+        target_dir = buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix)
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 # VRS
@@ -236,11 +276,11 @@ def main():
     if args.sandbox:
         target_dir_prefix = config.get("sandbox").replace("DUMMY_USER", ACTUAL_USER)
     else:
-        target_dir_prefix = config.get("target").replace("DUMMY_USER", ACTUAL_USER)
+        target_dir_prefix = config.get("irsetupdir").replace("DUMMY_USER", ACTUAL_USER)
     if args.debug:
         print("Target directory: "+target_dir_prefix)
 
-    target_dir_team = config.get("garage61")
+    target_dir_team = config.get("subdir")
     target_dir_supplier_p1 = "P1Doks"
     target_dir_supplier_vrs = "VRS"
     target_dir_supplier_go = "GO"
