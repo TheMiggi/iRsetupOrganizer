@@ -1,0 +1,62 @@
+{
+    "NSXGT3" : "acuransxevo22gt3",
+    "R8GT3" : "audir8lmsevo2gt3",
+    "AMGT3" : "amvantageevogt3",
+    "Aston" : "amvantageevogt3",
+    "VantageGT3" : "amvantageevogt3",
+    "M4GT3" : "bmwm4gt3",
+    "Z06GT3" : "chevyvettez06rgt3",
+    "296GT3" : "ferrari296gt3",
+    "FGT3" : "fordmustanggt3",
+    "Mustang" : "fordmustanggt3",
+    "MustangGT3" : "fordmustanggt3",
+    "LGT3" : "lamborghinievogt3",
+    "HuracanGT3" : "lamborghinievogt3",
+    "720SGT3" : "mclaren720sgt3",
+    "720GT3" : "mclaren720sgt3",
+    "MGT3" : "mercedesamgevogt3",
+    "992GT3R" : "porsche992rgt3",
+    "992R" : "porsche992rgt3",
+	
+    "VantageGT4" : "amvantagegt4",
+    "M4GT4" : "bmwm4gt4",
+    "570S" : "mclaren570sgt4",
+    "570s" : "mclaren570sgt4",
+    "MercGT4" : "mercedesamggt4",
+    "718" : "porsche718gt4",
+    "MustangGT4" : "fordmustanggt4",
+	
+	"ARX06" : "acuraarx06gtp",
+	"MHV8" : "bmwlmdh",
+	"CaddyGTP" : "cadillacvseriesrgtp",
+	"499P" : "ferrari499p",
+	"963" : "porsche963gtp",
+	"963GTP" : "porsche963gtp",
+	
+	"P217" : "dallarap217",
+	
+	"LMP3" : "ligierjsp320",
+	
+	"F3" : "dallaraf3",
+	"SFL" : "superformulalights324",
+	"SF23" : "superformulasf23 toyota",
+	
+	"IR18" : "dallarair18",
+	
+	"MX5" : "mx5 mx52016",
+	
+	"PCup" : "porsche992cup",
+	"992Cup" : "porsche9922cup",
+	
+	"M2" : "bmwm2csr",
+	
+	"Elantra" : "hyundaielantracn7",
+	"Civic" : "hondacivictyper",
+	"RS3" : "audirs3lms",
+	
+	"GT86" : "toyotagr86",
+	
+	"ClassA" : "stockcars fordmustang2022",
+	"Xfinity" : "stockcars2 mustang2019",
+	"Copen" : "trucks fordf150"
+}

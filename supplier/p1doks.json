@@ -1,0 +1,50 @@
+{
+    "NSXGT3" : "acuransxevo22gt3",
+    "AudiGTS" : "audir8lmsevo2gt3",
+    "BMWGT3" : "bmwm4gt3",
+    "BMWGTS" : "bmwm4gt3",
+    "BmwGTS" : "bmwm4gt3",
+    "CorvetteGT3" : "chevyvettez06rgt3",
+    "296GT3" : "ferrari296gt3",
+    "F296GT3" : "ferrari296gt3",
+    "Mustang" : "fordmustanggt3",
+    "MustangGT3" : "fordmustanggt3",
+    "LamboGTS" : "lamborghinievogt3",
+    "Mclaren720S" : "mclaren720sgt3",
+    "MercedesGT3" : "mercedesamgevogt3",
+    "992GT3R" : "porsche992rgt3",
+    "AstonGT3" : "amvantageevogt3",
+	
+    "AstonGT4" : "amvantagegt4",
+    "BMWGT4" : "bmwm4gt4",
+    "570GT4" : "mclaren570sgt4",
+    "MercGT4" : "mercedesamggt4",
+    "718GT4" : "porsche718gt4",
+    "MustangGT4" : "fordmustanggt4",
+	
+	"AcuraGTP" : "acuraarx06gtp",
+	"BMWGTP" : "bmwlmdh",
+	"CadillacGTP" : "cadillacvseriesrgtp",
+	"FerrariGTP" : "ferrari499p",
+	"PorscheGTP" : "porsche963gtp",
+	
+	"P217" : "dallarap217",
+	
+	"LMP3" : "ligierjsp320",
+	
+	"F3" : "dallaraf3",
+	"SFL" : "superformulalights324",
+	"SF23" : "superformulasf23 toyota",
+	
+	"MX5CUP" : "mx5 mx52016",
+	
+	"PCUP" : "porsche9922cup",
+	"PorscheCup" : "porsche9922cup",
+	
+	"BmwM2cs" : "bmwm2csr",
+	"BMWM2" : "bmwm2csr",
+	
+	"ElantraTCR" : "hyundaielantracn7",
+	"CivicTCR" : "hondacivictyper",
+	"AudiTCR" : "audirs3lms"
+}
