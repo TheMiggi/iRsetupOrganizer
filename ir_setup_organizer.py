@@ -118,8 +118,8 @@ def buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_
     if args.debug:
         print("Car mapping: ", target_dir_car)
         print("Week after padding: ", target_dir_seasonAndWeek)
-
-    return target_dir_prefix + target_dir_car + target_dir_suffix + target_dir_seasonAndWeek
+    target_dir = os.path.join(target_dir_prefix, target_dir_car, target_dir_suffix, target_dir_seasonAndWeek)
+    return target_dir
 
 def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix):
     zip_name = os.path.splitext(os.path.basename(zip_path))[0]
@@ -268,9 +268,9 @@ def main():
     args = parser.parse_args()
 
     # Sourcedirectory
+    config = loadConfig()
     src_dir = config.get("srcdir").replace("DUMMY_USER", ACTUAL_USER)
 
-    config = loadConfig()
 
     # Targetdirectory
     if args.sandbox:
@@ -289,19 +289,19 @@ def main():
     choice = input("Which setup provider? (VRS 1 - P1Doks 2 - GO 3): ").strip()
 
     try:
-        target_dir_suffix = '/' + target_dir_team
+        target_dir_suffix_wo_sup = os.path.join(target_dir_team)
         if choice == "1":
-            target_dir_suffix = '/' + target_dir_supplier_vrs + '/'
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_vrs, '')
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             vrs(args, src_dir, target_dir_prefix, target_dir_suffix)
         elif choice == "2":
-            target_dir_suffix = '/' + target_dir_supplier_p1 + '/'
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_p1, '')
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             p1doks(args, src_dir, target_dir_prefix, target_dir_suffix)
         elif choice == "3":
-            target_dir_suffix = '/' + target_dir_supplier_go + '/'
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_go, '')
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             go(args, src_dir, target_dir_prefix, target_dir_suffix)
