@@ -12,17 +12,29 @@ import zipfile
 ACTUAL_USER = os.getlogin()
 FILES_END_WITH = ".sto"
 
-def loadConfig():
-    return loadJson(os.path.join(getScriptDirectory() + "/config.json"))
+def loadConfig(args):
+    config_path = os.path.join(getScriptDirectory(), "config.json")
+    if args.debug:
+        print("Loading configuration from: ", config_path)
+    return loadJson(config_path)
 
-def loadCarsToDirectoryPathsVrs():
-    return loadJson(os.path.join(getScriptDirectory() + "/supplier/vrs.json"))
+def loadCarsToDirectoryPathsVrs(args):
+    vrsjson = os.path.join(getScriptDirectory(), "supplier", "vrs.json")
+    if args.debug:
+        print("Loading VRS car mappings from: ", vrsjson)
+    return loadJson(vrsjson)
 
-def loadCarsToDirectoryPathsP1Doks():
-    return loadJson(os.path.join(getScriptDirectory() + "/supplier/p1doks.json"))
+def loadCarsToDirectoryPathsP1Doks(args):
+    p1doksjson = os.path.join(getScriptDirectory(), "supplier", "p1doks.json")
+    if args.debug:
+        print("Loading P1Doks car mappings from: ", p1doksjson)
+    return loadJson(p1doksjson)
 
-def loadCarsToDirectoryPathsGo():
-    return loadJson(os.path.join(getScriptDirectory() + "/supplier/go.json"))
+def loadCarsToDirectoryPathsGo(args):
+    gojson = os.path.join(getScriptDirectory(), "supplier", "go.json")
+    if args.debug:
+        print("Loading GO car mappings from: ", gojson)
+    return loadJson(gojson)
 
 def getScriptDirectory():
     if getattr(sys, 'frozen', False):
@@ -47,7 +59,7 @@ def padWeekNr(args, text: str) -> str:
 # p1doks
 def p1doks(args, source_dir, target_dir_prefix, target_dir_suffix):
     # Load the directory names
-    PathsToCars = loadCarsToDirectoryPathsP1Doks()
+    PathsToCars = loadCarsToDirectoryPathsP1Doks(args)
 
     for filename in os.listdir(source_dir):
         file_path = os.path.join(source_dir, filename)
@@ -147,7 +159,7 @@ def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_s
 
 def go(args, source_dir, target_dir_prefix, target_dir_suffix):
     # GO uses the same setup naming pattern as P1Doks in most cases.
-    PathsToCars = loadCarsToDirectoryPathsGo()
+    PathsToCars = loadCarsToDirectoryPathsGo(args)
 
     for filename in os.listdir(source_dir):
         file_path = os.path.join(source_dir, filename)
@@ -177,7 +189,7 @@ def vrs(args, source_dir, target_dir_prefix, target_dir_suffix):
     weekInput = input("Which week? 1,2,...11,12 or even 13?: ").strip()
     week = "W"+weekInput
     # Load the directory names into a dict
-    PathsToCars = loadCarsToDirectoryPathsVrs()
+    PathsToCars = loadCarsToDirectoryPathsVrs(args)
 
     for filename in os.listdir(source_dir):
         file_path = os.path.join(source_dir, filename)
@@ -268,7 +280,7 @@ def main():
     args = parser.parse_args()
 
     # Sourcedirectory
-    config = loadConfig()
+    config = loadConfig(args)
     src_dir = config.get("srcdir").replace("DUMMY_USER", ACTUAL_USER)
 
 
