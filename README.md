@@ -3,6 +3,10 @@ The purpose of this tool is to organize the setup files located in the Downloads
 
 English:
 
+- Configuration
+  You need to set the destination path called "subdir" in the config.json file.
+  The variable DUMMY_USER is replaced automatically. You don't need to change that.
+
 - Remove all setup files (.sto) and zip files (from GO setups) from the "Downloads" directory.
   C:\Users\%userprofile%\Downloads
 
