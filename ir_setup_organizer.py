@@ -103,7 +103,7 @@ def p1doks(args, source_dir, target_dir_prefix, target_dir_suffix):
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 # GO
-def buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix):
+def buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix, week):
     name = os.path.splitext(os.path.basename(filename))[0].upper()
     target_dir_car = None
     for car_key in sorted(PathsToCars.keys(), key=len, reverse=True):
@@ -114,26 +114,19 @@ def buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_
     if target_dir_car is None:
         raise ValueError(f"No GO car mapping found in filename: {filename}")
 
-    target_dir_seasonAndWeek = ""
-    season_week_match = re.search(r"(?P<year>\d{2})S(?P<week>\d+)", name)
-    if season_week_match:
-        target_dir_seasonAndWeek = f"20{season_week_match.group('year')}W{int(season_week_match.group('week')):02d}"
-    else:
-        week_match = re.search(r"(?P<year>(?:19|20)\d{2})W(?P<week>\d+)", name)
-        if week_match:
-            target_dir_seasonAndWeek = f"{week_match.group('year')}W{int(week_match.group('week')):02d}"
-        else:
-            week_match = re.search(r"W(?P<week>\d+)", name)
-            if week_match:
-                target_dir_seasonAndWeek = f"W{int(week_match.group('week')):02d}"
+    season_match = re.search(r"(?P<year>\d{2})S(?P<season>\d+)", name)
+    if season_match is None:
+        raise ValueError(f"No GO season found in filename: {filename}")
+    target_dir_season = f"{season_match.group('year')}S{season_match.group('season')}"
 
     if args.debug:
         print("Car mapping: ", target_dir_car)
-        print("Week after padding: ", target_dir_seasonAndWeek)
-    target_dir = os.path.join(target_dir_prefix, target_dir_car, target_dir_suffix, target_dir_seasonAndWeek)
+        print("Season: ", target_dir_season)
+        print("Week: ", week)
+    target_dir = os.path.join(target_dir_prefix, target_dir_car, target_dir_suffix, target_dir_season, week)
     return target_dir
 
-def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix):
+def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix, week):
     zip_name = os.path.splitext(os.path.basename(zip_path))[0]
     extract_dir = os.path.join(os.path.dirname(zip_path), zip_name + "_extracted")
 
@@ -151,7 +144,7 @@ def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_s
 
     for file_path in sorted(extracted_files):
         filename = os.path.basename(file_path)
-        target_dir = buildGoTargetDir(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix)
+        target_dir = buildGoTargetDir(args, zip_path, PathsToCars, target_dir_prefix, target_dir_suffix, week)
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
     if os.path.exists(extract_dir):
@@ -160,6 +153,12 @@ def moveGoZipSetups(args, zip_path, PathsToCars, target_dir_prefix, target_dir_s
 def go(args, source_dir, target_dir_prefix, target_dir_suffix):
     # GO uses the same setup naming pattern as P1Doks in most cases.
     PathsToCars = loadCarsToDirectoryPathsGo(args)
+    while True:
+        week_input = input("Which GO week? Enter a number from 1 to 12: ").strip()
+        if week_input.isdigit() and 1 <= int(week_input) <= 12:
+            week = f"W{int(week_input):02d}"
+            break
+        print("Please enter a week number from 1 to 12.")
 
     for filename in os.listdir(source_dir):
         file_path = os.path.join(source_dir, filename)
@@ -168,7 +167,7 @@ def go(args, source_dir, target_dir_prefix, target_dir_suffix):
             continue
 
         if filename.lower().startswith("go") and filename.lower().endswith(".zip"):
-            moveGoZipSetups(args, file_path, PathsToCars, target_dir_prefix, target_dir_suffix)
+            moveGoZipSetups(args, file_path, PathsToCars, target_dir_prefix, target_dir_suffix, week)
             continue
 
         FILES_START_WITH = "GO"
@@ -181,7 +180,7 @@ def go(args, source_dir, target_dir_prefix, target_dir_suffix):
         if args.debug:
             print("Setup : " + filename)
 
-        target_dir = buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix)
+        target_dir = buildGoTargetDir(args, filename, PathsToCars, target_dir_prefix, target_dir_suffix, week)
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 # VRS

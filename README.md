@@ -20,7 +20,8 @@ English:
   
 - GO setups:
   - Start the ir_setup_organizer.exe, press 3 then the return key.
-  - The setups will automatically be moved to the destination.
+  - Enter the setup week (1-12) when prompted.
+  - The setups will be moved to a week subfolder below the season directory.
   
 Problems?
 - It may happen that the abbreviation for the car is not in the cars_directory_names_???.json file.

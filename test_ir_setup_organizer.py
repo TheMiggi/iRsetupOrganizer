@@ -1,8 +1,11 @@
+import io
 import os
 import shutil
 import tempfile
 import unittest
 import zipfile
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 from ir_setup_organizer import go
 
@@ -31,12 +34,22 @@ class SupplierTargetDirTests(unittest.TestCase):
             shutil.rmtree(archive_source_dir)
 
             target_dir_prefix = os.path.join(tmp_dir, "target") + os.sep
-            target_dir_suffix = "/GO/"
+            target_dir_suffix = os.path.join("GO", "")
 
-            go(args, tmp_dir, target_dir_prefix, target_dir_suffix)
+            with patch("builtins.input", return_value="1") as week_input:
+                with redirect_stdout(io.StringIO()):
+                    go(args, tmp_dir, target_dir_prefix, target_dir_suffix)
 
-            expected_file = os.path.join(target_dir_prefix, "mclaren720sgt3", "GO", "2026W04", "GO_26S4_IMSA_720SGT3_LeMans.sto")
+            expected_file = os.path.join(
+                target_dir_prefix,
+                "mclaren720sgt3",
+                "GO",
+                "26S4",
+                "W01",
+                "GO_26S4_IMSA_720SGT3_LeMans.sto",
+            )
             self.assertTrue(os.path.exists(expected_file))
+            week_input.assert_called_once()
 
 
 if __name__ == "__main__":
