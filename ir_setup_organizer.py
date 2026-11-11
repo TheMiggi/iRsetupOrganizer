@@ -99,7 +99,7 @@ def p1doks(args, source_dir, target_dir_prefix, target_dir_suffix):
             print("Week after padding: ", target_dir_seasonAndWeek)
 
         # Build target path
-        target_dir = target_dir_prefix + target_dir_car + target_dir_suffix + target_dir_seasonAndWeek
+        target_dir = os.path.join(target_dir_prefix, target_dir_car, target_dir_suffix, target_dir_seasonAndWeek)
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 # GO
@@ -243,11 +243,11 @@ def vrs(args, source_dir, target_dir_prefix, target_dir_suffix):
             print("Week after padding: ", target_dir_seasonAndWeek)
 
         # Build target path
-        target_dir = target_dir_prefix + target_dir_car + target_dir_suffix + target_dir_seasonAndWeek
+        target_dir = os.path.join(target_dir_prefix, target_dir_car, target_dir_suffix, target_dir_seasonAndWeek)
         copyOrMoveFiles(args, target_dir, file_path, filename)
 
 def copyOrMoveFiles(args, target_dir, file_path, filename):
-    target_folder = os.path.join(target_dir)
+    target_folder = target_dir
 
     os.makedirs(target_folder, exist_ok=True)
 
@@ -300,19 +300,19 @@ def main():
     choice = input("Which setup provider? (VRS 1 - P1Doks 2 - GO 3): ").strip()
 
     try:
-        target_dir_suffix_wo_sup = os.path.join(target_dir_team)
+        target_dir_suffix_wo_sup = target_dir_team
         if choice == "1":
-            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_vrs, '')
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_vrs)
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             vrs(args, src_dir, target_dir_prefix, target_dir_suffix)
         elif choice == "2":
-            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_p1, '')
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_p1)
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             p1doks(args, src_dir, target_dir_prefix, target_dir_suffix)
         elif choice == "3":
-            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_go, '')
+            target_dir_suffix = os.path.join(target_dir_suffix_wo_sup, target_dir_supplier_go)
             if args.debug:
                 print("Target Team + Setup Provider: "+target_dir_suffix)
             go(args, src_dir, target_dir_prefix, target_dir_suffix)
